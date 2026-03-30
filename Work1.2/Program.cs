@@ -6,37 +6,32 @@ class Program
 {
     static void Main()
     {
-        // Ввод количества цифр
+        // НАЧАЛО взаимодействия с пользователем (ввод данных)
         Console.Write("Введите количество цифр в последовательности: ");
         int n = int.Parse(Console.ReadLine());
 
-        // Логика проверки количества и вывод ошибки
-        if (n < 2)
-        {
-            Console.WriteLine("Ошибка: количество цифр должно быть не менее 2.");
-            Console.ReadLine();
-            return;
-        }
-
-        // Создаём массив для хранения последовательности
+        // Создаём массив для хранения цифр
         int[] numbers = new int[n];
 
-        // Ввод первой цифры
-        Console.Write("Введите цифру 1: ");
-        numbers[0] = int.Parse(Console.ReadLine());
+        // Вводим все цифры
+        for (int i = 0; i < n; i++)
+        {
+            Console.Write($"Введите цифру {i + 1}: ");
+            numbers[i] = int.Parse(Console.ReadLine());
+        }
+        // КОНЕЦ взаимодействия с пользователем
 
-        bool isIncreasing = true; // флаг упорядоченности
+        // НАЧАЛО логики 
+        bool isIncreasing = true; // предполагаем, что последовательность возрастает
 
         // Цикл ввода остальных цифр с проверкой
         for (int i = 1; i < n; i++)
         {
-            Console.Write($"Введите цифру {i + 1}: ");
-            numbers[i] = int.Parse(Console.ReadLine());
-
             // Проверка возрастания (сравниваем с предыдущим)
             if (numbers[i] <= numbers[i - 1])
             {
                 isIncreasing = false;
+                break;
             }
         }
 
@@ -44,15 +39,21 @@ class Program
         string sequenceStr = "{" + string.Join(", ", numbers) + "}";
 
         // Вывод результата с последовательностью
+        string resultMessage;
         if (isIncreasing)
         {
-            Console.WriteLine($"Последовательность {sequenceStr} упорядочена по возрастанию.");
+            resultMessage = $"Последовательность {sequenceStr} упорядочена по возрастанию.";
         }
         else
         {
-            Console.WriteLine($"Последовательность {sequenceStr} НЕ упорядочена по возрастанию.");
+            resultMessage = $"Последовательность {sequenceStr} НЕ упорядочена по возрастанию.";
         }
+        // КОНЕЦ логики
 
+        // НАЧАЛО взаимодействия с пользователем
+        Console.WriteLine(resultMessage);
         Console.ReadLine();
+        // КОНЕЦ взаимодействия с пользователем
+
     }
 }
