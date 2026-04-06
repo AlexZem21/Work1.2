@@ -1,59 +1,125 @@
-﻿//Установить, является ли последовательность цифр при просмотре их слева направо упорядоченной по возрастанию.
-//Например, для последовательности 1,4,7,8 ответ положительный, для чисел 1,7,8,2 и 1,6,6,8 — отрицательный и т. п.
-using System;
+﻿using System;
+
+class Logic
+{
+    // Проверка, возрастает ли последовательность
+    public static bool Check(int[] numbers)
+    {
+        for (int i = 1; i < numbers.Length; i++)
+        {
+            if (numbers[i] <= numbers[i - 1])
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Формирование сообщения
+    public static string Message(int[] numbers, bool isUp)
+    {
+        string sequenceStr = "";
+        for (int i = 0; i < numbers.Length; i++)
+        {
+            if (i > 0)
+            {
+                sequenceStr += ", ";
+            }
+            sequenceStr += numbers[i];
+        }
+        
+        sequenceStr = "{" + sequenceStr + "}";
+
+        if (isUp)
+        {
+            return $"Последовательность {sequenceStr} упорядочена по возрастанию";
+        }
+        else
+        {
+            return $"Последовательность {sequenceStr} НЕ упорядочена по возрастанию";
+        }
+    }
+    public static int ParseInt(string input)
+    {
+        if (input == null || input == "")
+        {
+            return -1; 
+        }
+
+        // Проверка, что все символы - цифры
+        for (int i = 0; i < input.Length; i++)
+        {
+            if (input[i] < '0' || input[i] > '9')
+            {
+                return -1;
+            }
+        }
+
+        // Проверка на переполнение (не более 4 цифр)
+        if (input.Length > 4)
+        {
+            return -1;
+        }
+        return int.Parse(input);
+    }
+
+    public static int ReadInt(string prompt)
+    {
+        while (true)
+        {
+            Console.Write(prompt);
+            string input = Console.ReadLine();
+            int result = ParseInt(input);
+            if(result != -1)
+            {
+                return result;
+            }
+            Console.WriteLine("Ошибка: необходимо ввести целое число (только цифры, без букв и знаков). Попробуйте снова.");
+        }
+    }
+
+    public static int ReadCount()
+    {
+        while (true)
+        {
+            int count = ReadInt("Введите количество цифр в последовательности(от 2 до 15): ");
+            if (count >= 2 && count <= 15)
+            {
+                return count;
+            }
+            if (count < 2)
+            {
+                Console.WriteLine("Ошибка: количество цифр должно быть не менее 2. Попробуйте снова.");
+            }
+            else
+            {
+                Console.WriteLine("Ошибка: количество цифр должно быть не более 15. Попробуйте снова.");
+            }
+        }
+    }
+
+    public static int[] ReadSequence(int count)
+    {
+        int[] nums = new int[count];
+        for (int i = 0; i < count; i++)
+        {
+            nums[i] = ReadInt($"Цифра {i + 1}: ");
+        }
+        return nums;
+    }
+}
 
 class Program
 {
     static void Main()
     {
-        // НАЧАЛО взаимодействия с пользователем (ввод данных)
-        Console.Write("Введите количество цифр в последовательности: ");
-        int n = int.Parse(Console.ReadLine());
+        int n = Logic.ReadCount();
+        int[] nums = Logic.ReadSequence(n);
 
-        // Создаём массив для хранения цифр
-        int[] numbers = new int[n];
+        bool isIncreasing = Logic.Check(nums);
+        string result = Logic.Message(nums, isIncreasing);
 
-        // Вводим все цифры
-        for (int i = 0; i < n; i++)
-        {
-            Console.Write($"Введите цифру {i + 1}: ");
-            numbers[i] = int.Parse(Console.ReadLine());
-        }
-        // КОНЕЦ взаимодействия с пользователем
-
-        // НАЧАЛО логики 
-        bool isIncreasing = true; // предполагаем, что последовательность возрастает
-
-        // Цикл ввода остальных цифр с проверкой
-        for (int i = 1; i < n; i++)
-        {
-            // Проверка возрастания (сравниваем с предыдущим)
-            if (numbers[i] <= numbers[i - 1])
-            {
-                isIncreasing = false;
-                break;
-            }
-        }
-
-        // Формируем строку с последовательностью для вывода
-        string sequenceStr = "{" + string.Join(", ", numbers) + "}";
-
-        // Вывод результата с последовательностью
-        string resultMessage;
-        if (isIncreasing)
-        {
-            resultMessage = $"Последовательность {sequenceStr} упорядочена по возрастанию.";
-        }
-        else
-        {
-            resultMessage = $"Последовательность {sequenceStr} НЕ упорядочена по возрастанию.";
-        }
-        // КОНЕЦ логики
-
-        // НАЧАЛО взаимодействия с пользователем
-        Console.WriteLine(resultMessage);
+        Console.WriteLine(result);
         Console.ReadLine();
-        // КОНЕЦ взаимодействия с пользователем
-
     }
 }
